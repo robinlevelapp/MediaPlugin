@@ -193,7 +193,9 @@ var path = file.Path;
 
 This will restult in 2 photos being saved for the photo. One in your private folder and one in a public directory that is shown. The value will be returned at `AlbumPath`.
 
-Android: When you set SaveToAlbum this will make it so your photos are public in the Pictures/YourDirectory or Movies/YourDirectory. This is the only way Android can detect the photos.
+**Android**: When you set SaveToAlbum this will make it so your photos are public in the Pictures/YourDirectory or Movies/YourDirectory. This is the only way Android can detect the photos.
+
+**UWP**: When you set `SaveToAlbum` make sure that you enable _Picture Library_ and _Video Library_ capabilities in the app manifest file, missing this will result in an exception
 
 
 ### Allow Cropping
