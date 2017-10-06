@@ -67,7 +67,21 @@ namespace Plugin.Media
             {
                 throw new MediaPermissionException(Permission.Storage);
             }
-            var media = await TakeMediaAsync("image/*", Intent.ActionPick, null);
+
+			var cameraOptions = new StoreCameraMediaOptions
+			{
+				Directory = options?.Directory ?? "temp",
+				Name = options?.Name ?? string.Empty,
+				PhotoSize = options?.PhotoSize ?? PhotoSize.Full,
+				CompressionQuality = options?.CompressionQuality ?? 100,
+				AllowCropping = false,
+				CustomPhotoSize = options?.CustomPhotoSize ?? 100,
+				MaxWidthHeight = options?.MaxWidthHeight,
+				RotateImage = options?.RotateImage ?? false,
+				SaveToAlbum = false,
+			};
+
+			var media = await TakeMediaAsync("image/*", Intent.ActionPick, cameraOptions);
 
             if (options == null)
                 options = new PickMediaOptions();
@@ -198,7 +212,7 @@ namespace Plugin.Media
         /// Picks a video from the default gallery
         /// </summary>
         /// <returns>Media file of video or null if canceled</returns>
-        public async Task<MediaFile> PickVideoAsync()
+        public async Task<MediaFile> PickVideoAsync(PickMediaOptions options = null)
         {
 
             if (!(await RequestStoragePermission()))
@@ -206,7 +220,20 @@ namespace Plugin.Media
                 throw new MediaPermissionException(Permission.Storage);
             }
 
-            return await TakeMediaAsync("video/*", Intent.ActionPick, null);
+			var cameraOptions = new StoreCameraMediaOptions
+			{
+				Directory = options?.Directory ?? "temp",
+				Name = options?.Name ?? string.Empty,
+				PhotoSize = options?.PhotoSize ?? PhotoSize.Full,
+				CompressionQuality = options?.CompressionQuality ?? 100,
+				AllowCropping = false,
+				CustomPhotoSize = options?.CustomPhotoSize ?? 100,
+				MaxWidthHeight = options?.MaxWidthHeight,
+				RotateImage = options?.RotateImage ?? false,
+				SaveToAlbum = false,
+			};
+
+			return await TakeMediaAsync("video/*", Intent.ActionPick, cameraOptions);
         }
 
         /// <summary>

@@ -272,7 +272,7 @@ namespace Plugin.Media
         /// Picks a video from the default gallery
         /// </summary>
         /// <returns>Media file of video or null if canceled</returns>
-        public async Task<MediaFile> PickVideoAsync()
+        public async Task<MediaFile> PickVideoAsync(PickMediaOptions options = null)
         {
 			var picker = new FileOpenPicker()
 			{

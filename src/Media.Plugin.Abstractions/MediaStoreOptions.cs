@@ -53,13 +53,32 @@ namespace Plugin.Media.Abstractions
     /// </summary>
     public class PickMediaOptions
     {
-        /// <summary>
-        /// Gets or sets the the max width or height of the image.
-        /// The image will aspect resize to the MaxWidthHeight as the max size of the image height or width. 
-        /// This value is only used if PhotoSize is PhotoSize.MaxWidthHeight 
-        /// </summary>
-        /// <value>The max width or height of the image.</value>
-        public int? MaxWidthHeight { get; set; }
+
+		/// <summary>
+		/// Directory name
+		/// </summary>
+		public string Directory
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// File name
+		/// </summary>
+		public string Name
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the the max width or height of the image.
+		/// The image will aspect resize to the MaxWidthHeight as the max size of the image height or width. 
+		/// This value is only used if PhotoSize is PhotoSize.MaxWidthHeight 
+		/// </summary>
+		/// <value>The max width or height of the image.</value>
+		public int? MaxWidthHeight { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the photo.

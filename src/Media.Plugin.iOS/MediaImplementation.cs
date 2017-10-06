@@ -79,8 +79,10 @@ namespace Plugin.Media
 
 			await CheckPermissions(Permission.Photos);
 
-            var cameraOptions = new StoreCameraMediaOptions
-            {
+			var cameraOptions = new StoreCameraMediaOptions
+			{
+				Directory = options?.Directory ?? "temp",
+				Name = options?.Name ?? string.Empty,
                 PhotoSize = options?.PhotoSize ?? PhotoSize.Full,
                 CompressionQuality = options?.CompressionQuality ?? 100,
 				AllowCropping = false,
@@ -124,7 +126,7 @@ namespace Plugin.Media
         /// Picks a video from the default gallery
         /// </summary>
         /// <returns>Media file of video or null if canceled</returns>
-        public async Task<MediaFile> PickVideoAsync()
+        public async Task<MediaFile> PickVideoAsync(PickMediaOptions options = null)
         {
             if (!IsPickVideoSupported)
                 throw new NotSupportedException();
@@ -135,7 +137,20 @@ namespace Plugin.Media
 
 			await CheckPermissions(Permission.Photos);
 
-			var media = await GetMediaAsync(UIImagePickerControllerSourceType.PhotoLibrary, TypeMovie);
+			var cameraOptions = new StoreCameraMediaOptions
+			{
+				Directory = options?.Directory ?? "temp",
+				Name = options?.Name ?? string.Empty,
+				PhotoSize = options?.PhotoSize ?? PhotoSize.Full,
+				CompressionQuality = options?.CompressionQuality ?? 100,
+				AllowCropping = false,
+				CustomPhotoSize = options?.CustomPhotoSize ?? 100,
+				MaxWidthHeight = options?.MaxWidthHeight,
+				RotateImage = options?.RotateImage ?? false,
+				SaveToAlbum = false,
+			};
+
+			var media = await GetMediaAsync(UIImagePickerControllerSourceType.PhotoLibrary, TypeMovie, cameraOptions);
 
             UIApplication.SharedApplication.EndBackgroundTask(backgroundTask);
 
