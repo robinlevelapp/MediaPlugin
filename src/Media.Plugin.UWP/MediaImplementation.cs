@@ -267,9 +267,8 @@ namespace Plugin.Media
 					Debug.WriteLine("unable to save to album:" + ex);
 				}
 			}
-
-			string albumPath = Path.GetDirectoryName(aPath);
-			return new MediaFile(aPath ?? result.Path, () => result.OpenStreamForReadAsync().Result, albumPath: albumPath);
+			
+			return new MediaFile(result.Path, () => result.OpenStreamForReadAsync().Result, albumPath: aPath);
 		}
 
 		static async Task<StorageFolder> GetDestinationStorageFolder(string directoryName, KnownLibraryId libraryId)
@@ -285,7 +284,7 @@ namespace Plugin.Media
 
 			var userDirectory = await libFolder.TryGetItemAsync(directoryName);
 			if (userDirectory == null)
-				await libFolder.CreateFolderAsync(path);
+				await libFolder.CreateFolderAsync(directoryName);
 
 			return await StorageFolder.GetFolderFromPathAsync(path);
 		}
