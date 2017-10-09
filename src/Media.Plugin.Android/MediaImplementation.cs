@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using Plugin.CurrentActivity;
 using System.Collections.Generic;
 using System.Linq;
+using Permission = Plugin.Permissions.Abstractions.Permission;
 
 namespace Plugin.Media
 {
@@ -64,9 +65,23 @@ namespace Plugin.Media
         {
             if (!(await RequestStoragePermission()))
             {
-                return null;
+                throw new MediaPermissionException(Permission.Storage);
             }
-            var media = await TakeMediaAsync("image/*", Intent.ActionPick, null);
+
+			var cameraOptions = new StoreCameraMediaOptions
+			{
+				Directory = options?.Directory ?? "temp",
+				Name = options?.Name ?? string.Empty,
+				PhotoSize = options?.PhotoSize ?? PhotoSize.Full,
+				CompressionQuality = options?.CompressionQuality ?? 100,
+				AllowCropping = false,
+				CustomPhotoSize = options?.CustomPhotoSize ?? 100,
+				MaxWidthHeight = options?.MaxWidthHeight,
+				RotateImage = options?.RotateImage ?? false,
+				SaveToAlbum = false,
+			};
+
+			var media = await TakeMediaAsync("image/*", Intent.ActionPick, cameraOptions);
 
             if (options == null)
                 options = new PickMediaOptions();
@@ -110,7 +125,7 @@ namespace Plugin.Media
 
             if (!(await RequestCameraPermissions()))
             {
-                return null;
+                throw new MediaPermissionException(Permission.Camera);
             }
 
 
@@ -197,15 +212,28 @@ namespace Plugin.Media
         /// Picks a video from the default gallery
         /// </summary>
         /// <returns>Media file of video or null if canceled</returns>
-        public async Task<MediaFile> PickVideoAsync()
+        public async Task<MediaFile> PickVideoAsync(PickMediaOptions options = null)
         {
 
             if (!(await RequestStoragePermission()))
             {
-                return null;
+                throw new MediaPermissionException(Permission.Storage);
             }
 
-            return await TakeMediaAsync("video/*", Intent.ActionPick, null);
+			var cameraOptions = new StoreCameraMediaOptions
+			{
+				Directory = options?.Directory ?? "temp",
+				Name = options?.Name ?? string.Empty,
+				PhotoSize = options?.PhotoSize ?? PhotoSize.Full,
+				CompressionQuality = options?.CompressionQuality ?? 100,
+				AllowCropping = false,
+				CustomPhotoSize = options?.CustomPhotoSize ?? 100,
+				MaxWidthHeight = options?.MaxWidthHeight,
+				RotateImage = options?.RotateImage ?? false,
+				SaveToAlbum = false,
+			};
+
+			return await TakeMediaAsync("video/*", Intent.ActionPick, cameraOptions);
         }
 
         /// <summary>
@@ -220,7 +248,7 @@ namespace Plugin.Media
 
             if (!(await RequestCameraPermissions()))
             {
-                return null;
+                throw new MediaPermissionException(Permission.Camera);
             }
 
             VerifyOptions(options);
