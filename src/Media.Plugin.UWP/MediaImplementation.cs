@@ -192,6 +192,19 @@ namespace Plugin.Media
 			foreach (var filter in SupportedImageFileTypes)
 				picker.FileTypeFilter.Add(filter);
 
+			var cameraOptions = new StoreCameraMediaOptions
+			{
+				Directory = options?.Directory ?? "temp",
+				Name = options?.Name ?? string.Empty,
+				PhotoSize = options?.PhotoSize ?? PhotoSize.Full,
+				CompressionQuality = options?.CompressionQuality ?? 100,
+				AllowCropping = false,
+				CustomPhotoSize = options?.CustomPhotoSize ?? 100,
+				MaxWidthHeight = options?.MaxWidthHeight,
+				RotateImage = options?.RotateImage ?? false,
+				SaveToAlbum = false,
+			};
+
 			var result = await picker.PickSingleFileAsync();
 			if (result == null)
 				return null;
@@ -202,8 +215,13 @@ namespace Plugin.Media
 			//copy local
 			try
 			{
-				var fileNameNoEx = Path.GetFileNameWithoutExtension(aPath);
-				copy = await result.CopyAsync(ApplicationData.Current.LocalFolder,
+				var fileNameNoEx = string.IsNullOrEmpty(cameraOptions.Name) 
+					? Path.GetFileNameWithoutExtension(aPath)
+					: Path.GetFileNameWithoutExtension(cameraOptions.Name);
+
+				var saveFolder = await GetDestinationStorageFolder(cameraOptions.Directory, ApplicationData.Current.LocalFolder);
+
+				copy = await result.CopyAsync(saveFolder,
 					fileNameNoEx + result.FileType, NameCollisionOption.GenerateUniqueName);
 
 				path = copy.Path;
@@ -267,20 +285,22 @@ namespace Plugin.Media
 					Debug.WriteLine("unable to save to album:" + ex);
 				}
 			}
-			
+
 			return new MediaFile(result.Path, () => result.OpenStreamForReadAsync().Result, albumPath: aPath);
 		}
 
 		static async Task<StorageFolder> GetDestinationStorageFolder(string directoryName, KnownLibraryId libraryId)
 		{
 			var storageLibrary = await StorageLibrary.GetLibraryAsync(libraryId);
+			return await GetDestinationStorageFolder(directoryName, storageLibrary.SaveFolder);
+		}
 
-			StorageFolder libFolder = storageLibrary.SaveFolder;
-
+		private static async Task<StorageFolder> GetDestinationStorageFolder(string directoryName, StorageFolder libFolder)
+		{
 			if (string.IsNullOrEmpty(directoryName))
 				return libFolder;
 
-			string path = Path.Combine(storageLibrary.SaveFolder.Path, directoryName);
+			string path = Path.Combine(libFolder.Path, directoryName);
 
 			var userDirectory = await libFolder.TryGetItemAsync(directoryName);
 			if (userDirectory == null)
