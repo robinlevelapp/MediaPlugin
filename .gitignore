@@ -238,3 +238,5 @@ _Pvt_Extensions
 
 tools/
 Build/
+src/.droidres/.media.droidres.db
+tests/.droidres/.media.droidres.db

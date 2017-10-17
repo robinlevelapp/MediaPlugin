@@ -101,7 +101,7 @@ namespace Plugin.Media
                     {
                         await ResizeAsync(media.Path, options.PhotoSize, options.CompressionQuality, options.CustomPhotoSize, originalMetadata);
                     }
-                    originalMetadata.SaveAttributes();
+                    originalMetadata?.SaveAttributes();
                 }
                 catch (Exception ex)
                 {
@@ -197,8 +197,10 @@ namespace Plugin.Media
                 {
                     await ResizeAsync(media.Path, options.PhotoSize, options.CompressionQuality, options.CustomPhotoSize, exif);
                 }
-                SetMissingMetadata(exif, options.Location);
-                exif.SaveAttributes();
+                if(exif != null)
+                    SetMissingMetadata(exif, options.Location);
+                
+                exif?.SaveAttributes();
             }
             catch(Exception ex)
             {
@@ -488,7 +490,8 @@ namespace Plugin.Media
                     PhotoSize = mediaOptions.PhotoSize,
                     CompressionQuality = mediaOptions.CompressionQuality,
                     CustomPhotoSize = mediaOptions.CustomPhotoSize,
-                    MaxWidthHeight = mediaOptions.MaxWidthHeight
+                    MaxWidthHeight = mediaOptions.MaxWidthHeight,
+                    RotateImage = mediaOptions.RotateImage,
                 },
                 exif);
         }
@@ -577,8 +580,8 @@ namespace Plugin.Media
                         }
 
                         //set scaled and rotated image dimensions
-                        exif.SetAttribute(TAG_PIXEL_X_DIMENSION, Java.Lang.Integer.ToString(finalWidth));
-                        exif.SetAttribute(TAG_PIXEL_Y_DIMENSION, Java.Lang.Integer.ToString(finalHeight));
+                        exif?.SetAttribute(TAG_PIXEL_X_DIMENSION, Java.Lang.Integer.ToString(finalWidth));
+                        exif?.SetAttribute(TAG_PIXEL_Y_DIMENSION, Java.Lang.Integer.ToString(finalHeight));
 
                         //if we need to rotate then go for it.
                         //then compresse it if needed
@@ -597,7 +600,7 @@ namespace Plugin.Media
                                 rotatedImage.Recycle();
                             }
                             //change the orienation to "not rotated"
-                            exif.SetAttribute(ExifInterface.TagOrientation, Java.Lang.Integer.ToString((int)Orientation.Normal));
+                            exif?.SetAttribute(ExifInterface.TagOrientation, Java.Lang.Integer.ToString((int)Orientation.Normal));
 
                         }
                         else
@@ -717,8 +720,8 @@ namespace Plugin.Media
                         var finalHeight = (int)(options.OutHeight * percent);
 
                         //set scaled image dimensions
-                        exif.SetAttribute(TAG_PIXEL_X_DIMENSION, Java.Lang.Integer.ToString(finalWidth));
-                        exif.SetAttribute(TAG_PIXEL_Y_DIMENSION, Java.Lang.Integer.ToString(finalHeight));
+                        exif?.SetAttribute(TAG_PIXEL_X_DIMENSION, Java.Lang.Integer.ToString(finalWidth));
+                        exif?.SetAttribute(TAG_PIXEL_Y_DIMENSION, Java.Lang.Integer.ToString(finalHeight));
 
                         //calculate sample size
                         options.InSampleSize = CalculateInSampleSize(options, finalWidth, finalHeight);
@@ -768,6 +771,9 @@ namespace Plugin.Media
 
         void SetMissingMetadata(ExifInterface exif, Location location)
         {
+            if (exif == null)
+                return;
+            
             var position = new float[6];
             if (!exif.GetLatLong(position) && location != null)
             {
@@ -803,6 +809,8 @@ namespace Plugin.Media
 
         static int GetRotation(ExifInterface exif)
         {
+            if (exif == null)
+                return 0;
             try
             {
                 var orientation = (Orientation)exif.GetAttributeInt(ExifInterface.TagOrientation, (int)Orientation.Normal);

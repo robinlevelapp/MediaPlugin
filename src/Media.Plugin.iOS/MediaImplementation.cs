@@ -73,7 +73,6 @@ namespace Plugin.Media
         {
             if (!IsPickPhotoSupported)
                 throw new NotSupportedException();
-
 			
             CheckUsageDescription(photoDescription);
 
@@ -88,7 +87,7 @@ namespace Plugin.Media
 				AllowCropping = false,
 				CustomPhotoSize = options?.CustomPhotoSize ?? 100,
 				MaxWidthHeight = options?.MaxWidthHeight,
-				RotateImage = options?.RotateImage ?? false,
+				RotateImage = options?.RotateImage ?? true,
 				SaveToAlbum = false,
             };
 
@@ -109,6 +108,8 @@ namespace Plugin.Media
                 throw new NotSupportedException();
 
             CheckUsageDescription(cameraDescription);
+			if (options.SaveToAlbum)
+				CheckUsageDescription(photoAddDescription);
 
             VerifyCameraOptions(options);
 
@@ -163,7 +164,7 @@ namespace Plugin.Media
         /// </summary>
         /// <param name="options">Video Media Options</param>
         /// <returns>Media file of new video or null if canceled</returns>
-        public Task<MediaFile> TakeVideoAsync(StoreVideoOptions options)
+        public async Task<MediaFile> TakeVideoAsync(StoreVideoOptions options)
         {
             if (!IsTakeVideoSupported)
                 throw new NotSupportedException();
@@ -172,13 +173,18 @@ namespace Plugin.Media
 
             CheckUsageDescription(cameraDescription, microphoneDescription);
 
+			if (options.SaveToAlbum)
+				CheckUsageDescription(photoAddDescription);
+
+			VerifyCameraOptions(options);
+
 			var permissionsToCheck = new List<Permission> { Permission.Camera, Permission.Microphone };
 			if (options.SaveToAlbum)
 				permissionsToCheck.Add(Permission.Photos);
 
-			VerifyCameraOptions(options);
+			await CheckPermissions(permissionsToCheck.ToArray());
 
-            return GetMediaAsync(UIImagePickerControllerSourceType.Camera, TypeMovie, options);
+            return await GetMediaAsync(UIImagePickerControllerSourceType.Camera, TypeMovie, options);
         }
 
         private UIPopoverController popover;
@@ -283,7 +289,7 @@ namespace Plugin.Media
             {
                 if (UIDevice.CurrentDevice.CheckSystemVersion(9, 0))
                 {
-                    picker.ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
+                    picker.ModalPresentationStyle = UIModalPresentationStyle.FullScreen;
                 }
                 viewController.PresentViewController(picker, true, null);
             }
@@ -297,6 +303,8 @@ namespace Plugin.Media
                 }
 
                 Interlocked.Exchange(ref pickerDelegate, null);
+
+                picker.Dispose();
                 return t;
             }).Unwrap();
         }
@@ -333,8 +341,6 @@ namespace Plugin.Media
 			var permissionsToRequest = new List<Permission>();
 			foreach(var permission in permissions)
 			{
-
-			
 				var permissionStatus = await CrossPermissions.Current.CheckPermissionStatusAsync(permission);
 
 				if (permissionStatus != PermissionStatus.Granted)
@@ -360,6 +366,7 @@ namespace Plugin.Media
 
 		const string cameraDescription = "NSCameraUsageDescription";
 		const string photoDescription = "NSPhotoLibraryUsageDescription";
+		const string photoAddDescription = "NSPhotoLibraryAddUsageDescription";
 		const string microphoneDescription = "NSMicrophoneUsageDescription";
 		void CheckUsageDescription(params string[] descriptionNames)
         {
