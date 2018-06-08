@@ -423,23 +423,29 @@ namespace Plugin.Media
                 var cameraOptions = (options as StoreCameraMediaOptions);
                 if (cameraOptions != null)
                 {
+					//if (cameraOptions.DefaultCamera == CameraDevice.Front)
+					//{
+					//	pickerIntent.PutExtra(MediaPickerActivity.ExtraFront, true);
+					//	pickerIntent.PutExtra("android.intent.extras.CAMERA_FACING", (int)CameraFacing.Front);
+
+					//	// Android API 25 and up
+					//	pickerIntent.PutExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+					//	pickerIntent.PutExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+					//}
+					//else if (cameraOptions.DefaultCamera == CameraDevice.Rear)
+					//{
+					//	pickerIntent.PutExtra(MediaPickerActivity.ExtraFront, false);
+					//	pickerIntent.PutExtra("android.intent.extras.CAMERA_FACING", (int)CameraFacing.Back);
+
+					//	// Android API 25 and up
+					//	pickerIntent.PutExtra("android.intent.extras.LENS_FACING_BACK", 1);
+					//	pickerIntent.PutExtra("android.intent.extra.USE_FRONT_CAMERA", false);
+					//}
+
 					if (cameraOptions.DefaultCamera == CameraDevice.Front)
 					{
-						pickerIntent.PutExtra(MediaPickerActivity.ExtraFront, true);
-						pickerIntent.PutExtra("android.intent.extras.CAMERA_FACING", (int)CameraFacing.Front);
+						pickerIntent.PutExtra("android.intent.extras.CAMERA_FACING", 1);
 
-						// Android API 25 and up
-						pickerIntent.PutExtra("android.intent.extras.LENS_FACING_FRONT", 1);
-						pickerIntent.PutExtra("android.intent.extra.USE_FRONT_CAMERA", true);
-					}
-					else if (cameraOptions.DefaultCamera == CameraDevice.Rear)
-					{
-						pickerIntent.PutExtra(MediaPickerActivity.ExtraFront, false);
-						pickerIntent.PutExtra("android.intent.extras.CAMERA_FACING", (int)CameraFacing.Back);
-
-						// Android API 25 and up
-						pickerIntent.PutExtra("android.intent.extras.LENS_FACING_BACK", 1);
-						pickerIntent.PutExtra("android.intent.extra.USE_FRONT_CAMERA", false);
 					}
 
 					if (cameraOptions.FlashMode == CameraFlash.On)
@@ -459,6 +465,7 @@ namespace Plugin.Media
 						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashAuto, true);
 
 					}
+
 					pickerIntent.PutExtra(MediaPickerActivity.ExtraSaveToAlbum, cameraOptions.SaveToAlbum);
                 }
                 var vidOptions = (options as StoreVideoOptions);
