@@ -64,11 +64,7 @@ namespace Plugin.Media.Abstractions
 		/// <summary>
 		/// Flash is Off
 		/// </summary>
-		Off,
-		// <summary>
-		/// Flash is Extra
-		/// </summary>
-		Extra
+		Off
 	}
 
 	/// <summary>
