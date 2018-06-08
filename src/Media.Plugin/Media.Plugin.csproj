@@ -7,14 +7,14 @@
 		<Product>$(AssemblyName) ($(TargetFramework))</Product>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
-		<Version>1.0.0.4</Version>
+		<Version>1.0.0.5</Version>
 		<Authors>LevelApp</Authors>
 		<PackageId>LevelApp.Plugin.Media</PackageId>
 		<PackOnBuild>true</PackOnBuild>
 		<PackageIconUrl>http://www.refractored.com/images/plugin_icon_media.png</PackageIconUrl>
-		<PackageLicenseUrl>https://github.com/robinlevelapp/MediaPlugin/blob/master/LICENSE</PackageLicenseUrl>
+		<PackageLicenseUrl></PackageLicenseUrl>
 		<Owners>JamesMontemagno</Owners>
-		<PackageProjectUrl>https://github.com/robinlevelapp/MediaPlugin</PackageProjectUrl>
+		<PackageProjectUrl></PackageProjectUrl>
 		<Summary>Take or pick photos and videos from a cross platform API.</Summary>
 		<PackageTags>levelapp</PackageTags>
 		<Title>Media Plugin for Xamarin and Windows</Title>
@@ -22,8 +22,8 @@
 			Take or pick photos and videos from a cross platform API.
 		</Description>
 		<Copyright>Copyright 2018</Copyright>
-		<RepositoryUrl>https://github.com/robinlevelapp/MediaPlugin</RepositoryUrl>
-		<PackageReleaseNotes>See: https://github.com/robinlevelapp/MediaPlugin</PackageReleaseNotes>
+		<RepositoryUrl></RepositoryUrl>
+		<PackageReleaseNotes></PackageReleaseNotes>
 
 		<NeutralLanguage>en</NeutralLanguage>
 		<LangVersion>default</LangVersion>
