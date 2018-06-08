@@ -56,6 +56,8 @@ namespace Plugin.Media
 		}
 
 		/// <inheritdoc/>
+		public bool IsFlashAvailable { get; }
+		/// <inheritdoc/>
 		public bool IsCameraAvailable { get; }
 		/// <inheritdoc/>
 		public bool IsTakePhotoSupported { get; }

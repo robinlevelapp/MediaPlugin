@@ -64,8 +64,11 @@ namespace Plugin.Media
             return true;
         }
 
-        /// <inheritdoc/>
-        public bool IsCameraAvailable
+		/// <inheritdoc/>
+		public bool IsFlashAvailable => true;
+
+		/// <inheritdoc/>
+		public bool IsCameraAvailable
         {
             get
             {

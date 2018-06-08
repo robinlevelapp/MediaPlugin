@@ -7,7 +7,7 @@
 		<Product>$(AssemblyName) ($(TargetFramework))</Product>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
-		<Version>1.0.0.8</Version>
+		<Version>1.0.0.13</Version>
 		<Authors>LevelApp</Authors>
 		<PackageId>LevelApp.Plugin.Media</PackageId>
 		<PackOnBuild>true</PackOnBuild>
@@ -42,8 +42,8 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<None Include="..\..\nuget\readme.txt" PackagePath="readme.txt" Pack="true" />
+		<PackageReference Include="LevelApp.Plugin.Permissions" Version="1.0.0" />
 		<PackageReference Include="MSBuild.Sdk.Extras" Version="1.4.0" PrivateAssets="All" />
-		<PackageReference Include="Plugin.Permissions" Version="3.0.0.12" />
 		<Compile Include="**\Shared\*.cs" />
 	</ItemGroup>
 

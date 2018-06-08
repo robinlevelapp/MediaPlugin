@@ -35,8 +35,9 @@ namespace Plugin.Media
 
             this.context = Android.App.Application.Context;
             IsCameraAvailable = context.PackageManager.HasSystemFeature(PackageManager.FeatureCamera);
+			IsFlashAvailable = context.PackageManager.HasSystemFeature(PackageManager.FeatureCameraFlash);
 
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.Gingerbread)
+			if (Build.VERSION.SdkInt >= BuildVersionCodes.Gingerbread)
                 IsCameraAvailable |= context.PackageManager.HasSystemFeature(PackageManager.FeatureCameraFront);
         }
 
@@ -45,8 +46,10 @@ namespace Plugin.Media
 
         /// <inheritdoc/>
         public bool IsCameraAvailable { get; }
-        /// <inheritdoc/>
-        public bool IsTakePhotoSupported => true;
+		/// <inheritdoc/>
+		public bool IsFlashAvailable { get; }
+		/// <inheritdoc/>
+		public bool IsTakePhotoSupported => true;
 
         /// <inheritdoc/>
         public bool IsPickPhotoSupported => true;
@@ -147,8 +150,7 @@ namespace Plugin.Media
                 throw new MediaPermissionException(Permission.Camera);
             }
 
-
-            VerifyOptions(options);
+			VerifyOptions(options);
 
             var media = await TakeMediaAsync("image/*", MediaStore.ActionImageCapture, options);
 
@@ -289,18 +291,22 @@ namespace Plugin.Media
 
             bool checkCamera = HasPermissionInManifest(Android.Manifest.Permission.Camera);
 
-            var hasStoragePermission = await CrossPermissions.Current.CheckPermissionStatusAsync(Permissions.Abstractions.Permission.Storage);
+			var hasStoragePermission = await CrossPermissions.Current.CheckPermissionStatusAsync(Permissions.Abstractions.Permission.Storage);
             var hasCameraPermission = Permissions.Abstractions.PermissionStatus.Granted;
-            if(checkCamera)
+			var hasFlashLightPermission = await CrossPermissions.Current.CheckPermissionStatusAsync(Permissions.Abstractions.Permission.FlashLight);
+
+			if (checkCamera)
                 hasCameraPermission = await CrossPermissions.Current.CheckPermissionStatusAsync(Permissions.Abstractions.Permission.Camera);
 
-
-            var permissions = new List<Permissions.Abstractions.Permission>();
+			var permissions = new List<Permissions.Abstractions.Permission>();
 
             if (hasCameraPermission != Permissions.Abstractions.PermissionStatus.Granted)
                 permissions.Add(Permissions.Abstractions.Permission.Camera);
 
-            if(hasStoragePermission != Permissions.Abstractions.PermissionStatus.Granted)
+			if (hasFlashLightPermission != Permissions.Abstractions.PermissionStatus.Granted)
+				permissions.Add(Permissions.Abstractions.Permission.FlashLight);
+
+			if (hasStoragePermission != Permissions.Abstractions.PermissionStatus.Granted)
                 permissions.Add(Permissions.Abstractions.Permission.Storage);
 
             if (permissions.Count == 0) //good to go!
@@ -319,6 +325,13 @@ namespace Plugin.Media
 					results[Permissions.Abstractions.Permission.Camera] != Permissions.Abstractions.PermissionStatus.Granted)
 			{
 				Console.WriteLine("Camera permission Denied.");
+				return false;
+			}
+
+			if (results.ContainsKey(Permissions.Abstractions.Permission.FlashLight) &&
+					results[Permissions.Abstractions.Permission.FlashLight] != Permissions.Abstractions.PermissionStatus.Granted)
+			{
+				Console.WriteLine("FlashLight permission Denied.");
 				return false;
 			}
 
@@ -449,6 +462,9 @@ namespace Plugin.Media
 
 					if (cameraOptions.FlashMode == CameraFlash.On)
 					{
+						if (!IsFlashAvailable)
+							throw new NotSupportedException();
+
 						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashON, true);
 						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashOFF, false);
 						pickerIntent.PutExtra("android.intent.extras.FLASH_MODE_ON", (int)CameraFlash.On);

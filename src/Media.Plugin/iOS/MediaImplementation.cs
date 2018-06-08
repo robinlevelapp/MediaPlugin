@@ -49,8 +49,11 @@ namespace Plugin.Media
                     IsTakePhotoSupported = IsPickPhotoSupported = true;
             }
         }
-        /// <inheritdoc/>
-        public bool IsCameraAvailable { get; }
+		/// <inheritdoc/>
+		public bool IsFlashAvailable { get; }
+
+		/// <inheritdoc/>
+		public bool IsCameraAvailable { get; }
 
         /// <inheritdoc/>
         public bool IsTakePhotoSupported { get; }

@@ -17,10 +17,14 @@ namespace Plugin.Media.Abstractions
         /// Gets if a camera is available on the device
         /// </summary>
         bool IsCameraAvailable { get; }
-        /// <summary>
-        /// Gets if ability to take photos supported on the device
-        /// </summary>
-        bool IsTakePhotoSupported { get; }
+		/// <summary>
+		/// Gets if a flash is available on the device
+		/// </summary>
+		bool IsFlashAvailable { get; }
+		/// <summary>
+		/// Gets if ability to take photos supported on the device
+		/// </summary>
+		bool IsTakePhotoSupported { get; }
 
         /// <summary>
         /// Gets if the ability to pick photo is supported on the device
