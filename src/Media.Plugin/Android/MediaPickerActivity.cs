@@ -32,8 +32,11 @@ namespace Plugin.Media
         internal const string ExtraTasked = "tasked";
         internal const string ExtraSaveToAlbum = "album_save";
         internal const string ExtraFront = "android.intent.extras.CAMERA_FACING";
+		internal const string ExtraFlashON = "android.intent.extras.FLASH_MODE_ON";
+		internal const string ExtraFlashOFF = "android.intent.extras.FLASH_MODE_OFF";
+		internal const string ExtraFlashAuto = "android.intent.extras.FLASH_MODE_AUTO";
 
-        internal static event EventHandler<MediaPickedEventArgs> MediaPicked;
+		internal static event EventHandler<MediaPickedEventArgs> MediaPicked;
 
         private int id;
         private int front;

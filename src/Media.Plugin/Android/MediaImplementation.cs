@@ -6,6 +6,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Provider;
+using Android.Hardware;
 using Plugin.Media.Abstractions;
 using Plugin.Permissions;
 using Android.Media;
@@ -422,11 +423,43 @@ namespace Plugin.Media
                 var cameraOptions = (options as StoreCameraMediaOptions);
                 if (cameraOptions != null)
                 {
-                    if (cameraOptions.DefaultCamera == CameraDevice.Front)
-                    {
-                        pickerIntent.PutExtra("android.intent.extras.CAMERA_FACING", 1);
-                    }
-                    pickerIntent.PutExtra(MediaPickerActivity.ExtraSaveToAlbum, cameraOptions.SaveToAlbum);
+					if (cameraOptions.DefaultCamera == CameraDevice.Front)
+					{
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFront, true);
+						pickerIntent.PutExtra("android.intent.extras.CAMERA_FACING", (int)CameraFacing.Front);
+
+						// Android API 25 and up
+						pickerIntent.PutExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+						pickerIntent.PutExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+					}
+					else if (cameraOptions.DefaultCamera == CameraDevice.Rear)
+					{
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFront, false);
+						pickerIntent.PutExtra("android.intent.extras.CAMERA_FACING", (int)CameraFacing.Back);
+
+						// Android API 25 and up
+						pickerIntent.PutExtra("android.intent.extras.LENS_FACING_BACK", 1);
+						pickerIntent.PutExtra("android.intent.extra.USE_FRONT_CAMERA", false);
+					}
+
+					if (cameraOptions.FlashMode == CameraFlash.On)
+					{
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashON, true);
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashOFF, false);
+						pickerIntent.PutExtra("android.intent.extras.FLASH_MODE_ON", (int)CameraFlash.On);
+					}
+					else if (cameraOptions.FlashMode == CameraFlash.Off)
+					{
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashON, false);
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashOFF, true);
+						pickerIntent.PutExtra("android.intent.extras.FLASH_MODE_ON", (int)CameraFlash.On);
+					}
+					else if (cameraOptions.FlashMode == CameraFlash.Default)
+					{
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashAuto, true);
+
+					}
+					pickerIntent.PutExtra(MediaPickerActivity.ExtraSaveToAlbum, cameraOptions.SaveToAlbum);
                 }
                 var vidOptions = (options as StoreVideoOptions);
                 if (vidOptions != null)

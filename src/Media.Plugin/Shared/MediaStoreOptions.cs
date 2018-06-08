@@ -49,6 +49,25 @@ namespace Plugin.Media.Abstractions
     }
 
 	/// <summary>
+	/// Camera flash
+	/// </summary>
+	public enum CameraFlash
+	{
+		/// <summary>
+		/// Off by default
+		/// </summary>
+		Default,
+		/// <summary>
+		/// Flash is ON
+		/// </summary>
+		On,
+		/// <summary>
+		/// Flash is Off
+		/// </summary>
+		Off
+	}
+
+	/// <summary>
 	/// Specifies the media picker's modal presentation style.
 	/// Only applies to iOS.
 	/// </summary>
@@ -182,6 +201,15 @@ namespace Plugin.Media.Abstractions
             get;
             set;
         }
+		/// <summary>
+		/// Default camera
+		/// Should work on iOS and Android, but not guaranteed on Windows as not every camera implements it
+		/// </summary>
+		public CameraFlash FlashMode
+		{
+			get;
+			set;
+		}
 
         /// <summary>
         /// Gets or sets the the max width or height of the image.
