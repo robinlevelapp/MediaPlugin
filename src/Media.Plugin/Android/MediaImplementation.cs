@@ -447,23 +447,23 @@ namespace Plugin.Media
 
 					}
 
-					//if (cameraOptions.FlashMode == CameraFlash.On)
-					//{
-					//	pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashON, true);
-					//	pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashOFF, false);
-					//	pickerIntent.PutExtra("android.intent.extras.FLASH_MODE_ON", (int)CameraFlash.On);
-					//}
-					//else if (cameraOptions.FlashMode == CameraFlash.Off)
-					//{
-					//	pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashON, false);
-					//	pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashOFF, true);
-					//	pickerIntent.PutExtra("android.intent.extras.FLASH_MODE_ON", (int)CameraFlash.On);
-					//}
-					//else if (cameraOptions.FlashMode == CameraFlash.Default)
-					//{
-					//	pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashAuto, true);
+					if (cameraOptions.FlashMode == CameraFlash.On)
+					{
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashON, true);
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashOFF, false);
+						pickerIntent.PutExtra("android.intent.extras.FLASH_MODE_ON", (int)CameraFlash.On);
+					}
+					else if (cameraOptions.FlashMode == CameraFlash.Off)
+					{
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashON, false);
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashOFF, true);
+						pickerIntent.PutExtra("android.intent.extras.FLASH_MODE_ON", (int)CameraFlash.On);
+					}
+					else if (cameraOptions.FlashMode == CameraFlash.Default)
+					{
+						pickerIntent.PutExtra(MediaPickerActivity.ExtraFlashAuto, true);
 
-					//}
+					}
 
 					pickerIntent.PutExtra(MediaPickerActivity.ExtraSaveToAlbum, cameraOptions.SaveToAlbum);
                 }
